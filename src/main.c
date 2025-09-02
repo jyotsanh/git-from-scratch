@@ -6,13 +6,17 @@
 #include <zconf.h>
 #include <zlib.h>
 
+// init
 int git_init();
 int make_git_dir();
 
+// cat-file
 int git_cat_file(char *read_mode, char *hash_code);
 unsigned char* decompress_object(unsigned char *buffer, long file_size, uLongf *out_size);
 unsigned char* read_hash_file(FILE *fptr, long *file_size); // reads hash file and return read buffer
 long get_file_size(FILE *fptr); // get the file size from which file has been open
+
+// hash-object
 
 int main(int argc, char *argv[]) {
     // Disable buffering so all stdout/stderr messages are printed immediately.
@@ -37,8 +41,15 @@ int main(int argc, char *argv[]) {
         }
 
         return git_cat_file(argv[2], argv[3]);
-
-    } 
+    }else if(strcmp(command, "hash-object")==0){
+        
+        if(argc<4){
+            fprintf(stdout, "Usage: ./mygit hash-object <mode> <file-name>\n");
+            return 0;
+        }
+        
+        return 1;
+    }
     else {
         fprintf(stderr, "Unknown command %s\n", command);
         return 1;

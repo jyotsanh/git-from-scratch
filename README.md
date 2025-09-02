@@ -61,3 +61,10 @@ This project is not a full Git replacement, but rather an educational implementa
 - GCC (tested with **GCC 12.3.0** on Ubuntu 24.04 LTS)  
 - Any C compiler supporting C11 or later should also work  
 - Linux/macOS environment (Windows may work under WSL)  
+
+
+## How to Compiler
+- `gcc main.c -o mygit -lz`
+    - l = tells comiler to link
+    - z = zlib library  
+- zlib library compress file content plain text 
