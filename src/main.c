@@ -5,6 +5,12 @@
 #include <errno.h>
 #include <zconf.h>
 #include <zlib.h>
+#include <openssl/sha.h>
+
+// utility methods
+long get_file_size(char *file_name); // get the file size from which file has been open
+int check_file_exist_or_not(char *file_name);
+
 
 // init
 int git_init();
@@ -14,9 +20,10 @@ int make_git_dir();
 int git_cat_file(char *read_mode, char *hash_code);
 unsigned char* decompress_object(unsigned char *buffer, long file_size, uLongf *out_size);
 unsigned char* read_hash_file(FILE *fptr, long *file_size); // reads hash file and return read buffer
-long get_file_size(FILE *fptr); // get the file size from which file has been open
 
 // hash-object
+int git_hash_object();
+
 
 int main(int argc, char *argv[]) {
     // Disable buffering so all stdout/stderr messages are printed immediately.
@@ -48,6 +55,24 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         
+        char *file_name = argv[3];
+        fprintf(stdout, "file name: %s ", file_name);
+
+        int status = check_file_exist_or_not(file_name);
+
+        if(status==1){
+            fprintf(stderr,"file doesn't exist");
+            return 1;
+        }
+
+        // FILE *fptr = fopen(file_name, "r");
+        long file_size = get_file_size(file_name);
+        char *file_buffer = malloc(file_size);
+        fread(file_buffer,1, sizeof(file_buffer), fptr);
+
+        fprintf(stdout, "file size : %ld", file_size);
+
+
         return 1;
     }
     else {
@@ -130,7 +155,6 @@ int make_git_dir(){
     return 0;
 }
 
-
 unsigned char* read_hash_file(FILE *fptr, long *file_size){
     
     fseek(fptr, 0, SEEK_END); // go to end of the file
@@ -143,7 +167,8 @@ unsigned char* read_hash_file(FILE *fptr, long *file_size){
     return buffer;
 }
 
-long get_file_size(FILE *fptr){
+long get_file_size(char *file_name){
+    FILE *fptr = fopen(file_name, "r");
     fseek(fptr, 0, SEEK_END); // go to end of the file
     long file_size = ftell(fptr); // get the filesize
     rewind(fptr); // move back to start of file
@@ -166,3 +191,13 @@ unsigned char* decompress_object(unsigned char *buffer, long file_size, uLongf *
     return decompressed;
 }
 
+int check_file_exist_or_not(char *file_name){
+    FILE *fptr = fopen(file_name, "r");
+    if(fptr==NULL){
+        // fclose(fptr);
+        
+        return 1;
+    }
+    fclose(fptr);
+    return 0;
+}
