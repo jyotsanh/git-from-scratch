@@ -65,10 +65,10 @@ int main(int argc, char *argv[]) {
             return 1;
         }
 
-        // FILE *fptr = fopen(file_name, "r");
+        FILE *fptr = fopen(file_name, "r");
         long file_size = get_file_size(file_name);
         char *file_buffer = malloc(file_size);
-        fread(file_buffer,1, sizeof(file_buffer), fptr);
+        // fread(file_buffer,1, sizeof(file_buffer), fptr);
 
         fprintf(stdout, "file size : %ld", file_size);
 

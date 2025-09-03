@@ -64,7 +64,8 @@ This project is not a full Git replacement, but rather an educational implementa
 
 
 ## How to Compiler
-- `gcc main.c -o mygit -lz`
-    - l = tells comiler to link
-    - z = zlib library  
+- `gcc main.c -o mygit -lcrypto -lz`
+    - lz = tells comiler to link zlib library  
+    - lcrypto = tells comiler to link openssl library  
 - zlib library compress file content plain text 
+- openssl library for hashing the file content.
